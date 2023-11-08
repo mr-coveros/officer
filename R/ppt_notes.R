@@ -124,7 +124,7 @@ notes_location_label <- function( ph_label, ...){
 #' @param ... unused arguments
 notes_location_type <- function( type = "body", ...){
 
-  ph_types <- c("ftr", "sldNum", "hdr", "body", "sldImg")
+  ph_types <- c("ftr", "sldNum", "hdr", "body", "sldImg", "title")
   if(!type %in% ph_types){
     stop("argument type ('", type, "') expected to be a value of ",
          paste0(shQuote(ph_types), collapse = ", "), ".")
