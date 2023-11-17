@@ -223,7 +223,7 @@ set_notes.character <- function( x, value, location, ... ){
 
   idx <- x$notesSlide$slide_index(nslidename)
   nSlide <- x$notesSlide$get_slide(idx)
-
+  cat("slide", nSlide, "\n")
   new_ph <- ph_from_location(location, x, nSlide)
 
   # remove placeholder if already used
