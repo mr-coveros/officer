@@ -154,7 +154,6 @@ ph_from_location.location_label <- function(loc, doc, slide, ...) {
 }
 
 ph_from_location.location_type <- function(loc, doc, slide, ...) {
-  cat("loc", loc, "\n", "doc", doc, "\n", "slide", slide, "\n")
   # Find type in slide first
   xfrm <- doc$slide$xfrm()
   location <- xfrm[xfrm$type == loc$type, ]
