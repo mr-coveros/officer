@@ -154,9 +154,11 @@ ph_from_location.location_label <- function(loc, doc, slide, ...) {
 }
 
 ph_from_location.location_type <- function(loc, doc, slide, ...) {
+  cat("loc", loc, "\n", "doc", doc, "\n", "slide", slide, "\n")
   # Find type in slide first
   xfrm <- doc$slide$xfrm()
   location <- xfrm[xfrm$type == loc$type, ]
+  cat("location", location, "\n")
   if (nrow(location) < 1) {
     # If not found, look in notes master
     xfrm <- doc$notesMaster$xfrm()
