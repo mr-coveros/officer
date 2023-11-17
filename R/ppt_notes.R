@@ -134,26 +134,36 @@ notes_location_type <- function( type = "body", ...){
   x
 }
 
-ph_from_location <- function(loc, doc, ...){
-  UseMethod("ph_from_location", loc)
+ph_from_location <- function(loc, doc, slide, ...){
+  UseMethod("ph_from_location", loc, doc, slide)
 }
 
-
-ph_from_location.location_label <- function(loc, doc, ...) {
-  xfrm <- doc$notesMaster$xfrm()
+ph_from_location.location_label <- function(loc, doc, slide, ...) {
+  # Find label in slide first
+  xfrm <- doc$slide$xfrm()
   location <- xfrm[xfrm$ph_label == loc$ph_label, ]
-  if (nrow(location) < 1) stop("No placeholder with label ", loc$ph_label, " found!")
-  str <- "<p:nvSpPr><p:cNvPr id=\"0\" name=\"%s\"/><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr>%s</p:nvPr></p:nvSpPr><p:spPr/>"
+  if (nrow(location) < 1) {
+    # If not found, look in notes master
+    xfrm <- doc$notesMaster$xfrm()
+    location <- xfrm[xfrm$ph_label == loc$ph_label, ]
+    if (nrow(location) < 1) stop("No placeholder with label ", loc$ph_label, " found!")
+  }
+  str <- "<p:nvSpPr><p:cNvPr id=\"0\" name=\"%s\"/><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr>%s</p:nvPr></p:nvSpPr></p:spPr>"
   new_ph <- sprintf(str, location$ph_label, location$ph)
   return(list(ph = new_ph, label = location$ph_label))
 }
 
-
-ph_from_location.location_type <- function(loc, doc, ...) {
-  xfrm <- doc$notesMaster$xfrm()
+ph_from_location.location_type <- function(loc, doc, slide, ...) {
+  # Find type in slide first
+  xfrm <- doc$slide$xfrm()
   location <- xfrm[xfrm$type == loc$type, ]
-  if (nrow(location) < 1) stop("No placeholder of type ", loc$type, " found!")
-  str <- "<p:nvSpPr><p:cNvPr id=\"0\" name=\"%s\"/><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr>%s</p:nvPr></p:nvSpPr><p:spPr/>"
+  if (nrow(location) < 1) {
+    # If not found, look in notes master
+    xfrm <- doc$notesMaster$xfrm()
+    location <- xfrm[xfrm$type == loc$type, ]
+    if (nrow(location) < 1) stop("No placeholder of type ", loc$type, " found!")
+  }
+  str <- "<p:nvSpPr><p:cNvPr id=\"0\" name=\"%s\"/><p:cNvSpPr><a:spLocks noGrp=\"1\"/></p:cNvSpPr><p:nvPr>%s</p:nvPr></p:nvSpPr></p:spPr>"
   new_ph <- sprintf(str, location$ph_label[1], location$ph[1])
   return(list(ph = new_ph, label = location$ph_label[1]))
 }
@@ -213,7 +223,7 @@ set_notes.character <- function( x, value, location, ... ){
   idx <- x$notesSlide$slide_index(nslidename)
   nSlide <- x$notesSlide$get_slide(idx)
 
-  new_ph <- ph_from_location(location, x)
+  new_ph <- ph_from_location(location, x, nSlide)
 
   # remove placeholder if already used
   xml_remove(xml_find_first(nSlide$get(), paste0("//p:spTree/p:sp[p:nvSpPr/p:cNvPr[@name='", new_ph$label, "']]")))
