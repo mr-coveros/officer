@@ -251,7 +251,7 @@ set_notes.block_list <- function( x, value, location, ... ){
   idx <- x$notesSlide$slide_index(nslidename)
   nSlide <- x$notesSlide$get_slide(idx)
 
-  new_ph <- ph_from_location(location, x)
+  new_ph <- ph_from_location(location, x, nSlide)
 
   # remove placeholder if already used
   xml_remove(xml_find_first(nSlide$get(), paste0("//p:spTree/p:sp[p:nvSpPr/p:cNvPr[@name='", new_ph$label, "']]")))
