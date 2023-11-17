@@ -135,7 +135,7 @@ notes_location_type <- function( type = "body", ...){
 }
 
 ph_from_location <- function(loc, doc, slide, ...){
-  UseMethod("ph_from_location", loc, doc, slide)
+  UseMethod("ph_from_location", loc)
 }
 
 ph_from_location.location_label <- function(loc, doc, slide, ...) {
